@@ -1,0 +1,73 @@
+.cardio-container {
+    text-align: center;
+    padding: 20px;
+    color: #2b2d42;
+    overflow: auto; /* Prevent content overflow */
+  }
+  
+  h2 {
+    color: #008080;
+  }
+  
+  .exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .exercise-card {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  
+  .exercise-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .gif-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .gif-container img {
+    width: 100%;
+    max-height: 150px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  h3 {
+    color: #007acc;
+  }
+  
+  p {
+    color: #555;
+  }
+  
+  .back-button {
+    background-color: #007acc;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    position: sticky; /* Keeps button visible on scroll */
+    top: 20px; /* Stick button to the top */
+    left: 20px; /* Add some left spacing */
+    z-index: 100; /* Ensure button stays above content */
+  }
+  
+  .back-button:hover {
+    background-color: #005fa3;
+  }
+  

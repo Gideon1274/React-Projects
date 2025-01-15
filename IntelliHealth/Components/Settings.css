@@ -1,0 +1,22 @@
+.settings-page {
+    padding: 20px;
+  }
+  
+  .settings-page h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+  
+  .settings-page ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .settings-page ul li {
+    margin: 10px 0;
+  }
+  
+  .delete-account {
+    color: red;
+  }
+  

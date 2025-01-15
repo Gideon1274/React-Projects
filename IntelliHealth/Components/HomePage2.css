@@ -1,0 +1,352 @@
+/* Make the component fullscreen */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.homepage {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  height: 100vh;
+  width: 100vw;
+  font-family: Arial, sans-serif;
+}
+
+/* Sidebar styles */
+.sidebar {
+  margin-top: 60px; /* Adjust to make space for the fixed navbar */
+  padding: 60px;
+  /* margin: 20px; */
+  width: 250px; /* Sidebar width */
+  background-color: #f4f4f4;
+  height: calc(100vh - 60px); /* Make sidebar take the remaining space below navbar */
+  position: relative;
+}
+
+.profile-section {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.profile-name {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.features-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.features-list p {
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+/* Main content styles */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+}
+
+.main-content h2 {
+  margin-bottom: 20px;
+}
+
+.workout-plan {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin-top: 20px;
+}
+
+.workout-item {
+  text-align: center;
+  width: 30%;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.join-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.join-button:hover {
+  background-color: #0056b3;
+}
+/* HomePage2.css */
+
+/* Make the workout plan a flex container to align items horizontally */
+.workout-plan {
+  display: flex;
+  flex-wrap: wrap;  /* Allow items to wrap to the next line if necessary */
+  gap: 20px;  /* Space between items */
+  justify-content: flex-start;  /* Align items to the start of the container */
+}
+
+/* Style for each workout item with background image */
+.workout-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;  /* Align content to the start (left) */
+  justify-content: space-between;  /* Distribute space inside each item */
+  width: 2150px;  /* Adjust width as needed */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-image: url('https://atlasbars.com/cdn/shop/articles/GfUF07rjOOWfqErQsmP2ggSse0wYb90mmjhU8RfKYUeT3sZIC-out-0.png?v=1686145995');  /* Set your background image here */
+  background-size: cover;  /* Cover the entire container */
+  background-position: center;  /* Center the image */
+  color: white;  /* Text color for better contrast with background */
+}
+
+/* Adjust button size and position */
+.join-button {
+  margin-top: 10px;
+  padding: 6px 12px;  /* Smaller button size */
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-end;  /* Align the button to the right */
+}
+
+.join-button:hover {
+  background-color: #45a049;
+}
+
+/* Optional: Add hover effect for workout items */
+.workout-item:hover {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+/* HomePage2.css */
+
+/* Modal Styles */
+.modal-overlay {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.5);
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.modal {
+  /* background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.close-modal-button {
+  margin-top: 20px;
+  padding: 8px 16px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-modal-button:hover {
+  background-color: #d32f2f;
+}
+
+/* Sidebar Feature List Styles */
+.features-list p {
+  cursor: pointer;
+  padding: 10px;
+  margin: 5px 0;
+  transition: background-color 0.3s;
+}
+
+.features-list p:hover {
+  background-color: #f0f0f0;
+}
+
+/* Navbar styles */
+.navbar {
+display: flex;
+justify-content: space-between;
+width: 100%;
+align-items: center;
+padding: 10px 20px;
+background-color: #333;
+color: white;
+}
+
+.navbar .logo {
+font-size: 24px;
+font-weight: bold;
+}
+
+.navbar .nav-links {
+display: flex;
+}
+
+.navbar .nav-link {
+color: white;
+margin-left: 20px;
+text-decoration: none;
+}
+
+.navbar .nav-link:hover {
+text-decoration: underline;
+}
+
+/* Profile Section styles */
+.profile-info {
+display: flex;
+align-items: center;
+margin-left: 20px;
+}
+
+.profile-info .profile-image {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+margin-right: 10px;
+}
+
+.profile-info .profile-name {
+font-size: 18px;
+color: white;
+}
+
+/* Style for the top bar/navbar */
+.top-bar {
+background-color: #333; /* Dark background color */
+color: white;
+width: 100%;
+height: 5%; /* Fixed height for the navbar */
+display: flex;
+justify-content: space-between;
+align-items: center;
+position: fixed; /* Keep navbar fixed at the top */
+top: 0;
+left: 0;
+z-index: 10; /* Ensure it stays on top of other content */
+}
+
+.content-wrapper {
+display: flex; /* Use flexbox to lay out sidebar and main content side by side */
+margin-top: 60px; /* To make space for the fixed navbar */
+height: calc(100vh - 60px); /* Full remaining height of the screen */
+}
+
+/* Styling for the logo */
+.logo {
+display: flex;
+align-items: center;
+justify-content: center; /* Center the logo vertically */
+height: 100%; /* Ensure the logo container takes up the full height */
+padding-left: 10px; /* Optional: Add some left padding for spacing */
+}
+
+.logo-image {
+width: 90px; /* Adjust the size as needed */
+height: auto; /* Maintain aspect ratio */
+}
+
+/* Adjust nav links if necessary */
+.nav-links {
+display: flex;
+align-items: center;
+margin-left: auto; /* Align nav links to the right */
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the logo vertically */
+  height: 100%; /* Ensure the logo container takes up the full height */
+  padding-left: 10px; /* Optional: Add some left padding for spacing */
+  }
+  
+  .logo-image {
+  width: 90px; /* Adjust the size as needed */
+  height: auto; /* Maintain aspect ratio */
+  }
+  .profile-modal {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 5px 0;
+    width: 120px; /* Adjust the width as needed */
+    z-index: 10;
+  }
+  
+  .settings-option {
+    display: block;
+    width: 100%;
+    padding: 8px 10px; /* Reduce padding to make buttons smaller */
+    font-size: 0.9em; /* Make font size smaller */
+    color: #333;
+    background-color: #fff;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .settings-option:hover {
+    background-color: #f0f0f0;
+    color: #007bff;
+  }
+
+  .back-button {
+    font-size: 14px; /* Smaller font size */
+    padding: 8px 12px; /* Reduce padding for a smaller button */
+    height: auto; /* Adjust height if necessary */
+    width: auto; /* Set width to auto to adjust based on content */
+    background-color: #4CAF50; /* Example background color */
+    color: white; /* Text color */
+    border: none;
+    border-radius: 5px; /* Slight border radius for rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .back-button:hover {
+    background-color: #45a049; /* Slightly darker shade on hover */
+  }
+  
