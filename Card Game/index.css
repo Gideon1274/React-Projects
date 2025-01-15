@@ -1,0 +1,39 @@
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+.game {
+  display: flex;
+  justify-content: center; 
+  margin-bottom: 20px;
+}
+
+.player {
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  gap: 10px; 
+}
+
+.card {
+  border: 1px solid #000;
+  width: 60px; 
+  height: 80px;   
+  text-align: center;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
