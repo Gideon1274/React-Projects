@@ -259,7 +259,7 @@ const Dashboard = () => {
             flexGrow: 1,
             p: { xs: 2, sm: 3, md: 4 },
             bgcolor: '#1a1d29',
-            width: 'calc(100% - 80px)',
+            width: { sm: 'calc(100% - 80px)', md: 'calc(100% - 80px)' },
             minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column',
@@ -276,7 +276,7 @@ const Dashboard = () => {
           </Box>
 
           {/* Stats Section */}
-          <Grid container spacing={2} sx={{ mb: 4 }}>
+          <Grid container spacing={3} sx={{ mb: 4 }}>
             {[
               { icon: <EventIcon />, title: 'Total Events', value: '8,739.76' },
               { icon: <ListIcon />, title: 'Tasks Today', value: '146.76' },
@@ -300,10 +300,10 @@ const Dashboard = () => {
           </Grid>
 
           {/* Quick Add Task & Upcoming Events */}
-          <Grid container spacing={2} sx={{ mb: 4, flexGrow: 1 }}>
+          <Grid container spacing={3} sx={{ mb: 4, flexGrow: 1 }}>
             {/* Quick Add Task */}
             <Grid item xs={12} md={6}>
-              <StyledCard sx={{ height: '100%' }}>
+              <StyledCard sx={{ height: '100%', minHeight: '400px' }}>
                 <CardContent>
                   <Typography variant="h6" sx={{ color: '#ffffff', mb: 2 }}>
                     Quick Add Task
@@ -348,7 +348,7 @@ const Dashboard = () => {
 
             {/* Upcoming Events */}
             <Grid item xs={12} md={6}>
-              <StyledCard sx={{ height: '100%' }}>
+              <StyledCard sx={{ height: '100%', minHeight: '400px' }}>
                 <CardContent>
                   <Typography variant="h6" sx={{ color: '#ffffff', mb: 2 }}>
                     Upcoming Events
@@ -377,7 +377,7 @@ const Dashboard = () => {
           </Grid>
 
           {/* Feature Cards */}
-          <Grid container spacing={2} sx={{ mb: 4, flexGrow: 1 }}>
+          <Grid container spacing={3} sx={{ mb: 4, flexGrow: 1 }}>
             {[
               {
                 title: 'Core Features',
@@ -405,7 +405,7 @@ const Dashboard = () => {
                     {expanded[section.title] ? <ExpandLessIcon sx={{ color: '#9ca3af' }} /> : <ExpandMoreIcon sx={{ color: '#9ca3af' }} />}
                   </Box>
                   <Collapse in={expanded[section.title] || !isMobile}>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={3}>
                       {section.items.map((item, idx) => (
                         <Grid item xs={12} sm={6} md={4} key={idx}>
                           <StyledCard>
@@ -445,10 +445,10 @@ const Dashboard = () => {
           </Grid>
 
           {/* Recent Activity, Progress Tracker & Motivational Quote */}
-          <Grid container spacing={2} sx={{ mb: 4, flexGrow: 1 }}>
+          <Grid container spacing={3} sx={{ mb: 4, flexGrow: 1 }}>
             {/* Recent Activity */}
             <Grid item xs={12} md={4}>
-              <StyledCard sx={{ height: '100%' }}>
+              <StyledCard sx={{ height: '100%', minHeight: '350px' }}>
                 <CardContent>
                   <Typography variant="h6" sx={{ color: '#ffffff', mb: 2 }}>
                     Recent Activity
@@ -471,7 +471,7 @@ const Dashboard = () => {
 
             {/* Progress Tracker */}
             <Grid item xs={12} md={4}>
-              <StyledCard sx={{ height: '100%' }}>
+              <StyledCard sx={{ height: '100%', minHeight: '350px' }}>
                 <CardContent>
                   <Typography variant="h6" sx={{ color: '#ffffff', mb: 2 }}>
                     Progress Tracker
@@ -502,7 +502,7 @@ const Dashboard = () => {
 
             {/* Motivational Quote */}
             <Grid item xs={12} md={4}>
-              <StyledCard sx={{ height: '100%' }}>
+              <StyledCard sx={{ height: '100%', minHeight: '350px' }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <QuoteIcon sx={{ color: '#3b82f6', fontSize: '2.5rem', mb: 2 }} />
                   <Typography variant="h6" sx={{ color: '#ffffff', mb: 1 }}>
