@@ -19,6 +19,21 @@ import {
   Chip,
   Divider,
   Tooltip,
+  AppBar,
+  Toolbar,
+  CssBaseline,
+  useMediaQuery,
+  Collapse,
+  TextField,
+  ListItemButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  LinearProgress,
 } from '@mui/material';
 import { ThemeProvider, styled } from '@mui/material/styles';
 import {
@@ -30,6 +45,13 @@ import {
   Notifications as NotificationsIcon,
   Settings as SettingsIcon,
   Person as PersonIcon,
+  Menu as MenuIcon,
+  ExpandMore as ExpandMoreIcon,
+  ExpandLess as ExpandLessIcon,
+  Add as AddIcon,
+  Done as DoneIcon,
+  AccessTime as AccessTimeIcon,
+  FormatQuote as QuoteIcon,
 } from '@mui/icons-material';
 
 // Styled components
@@ -38,15 +60,18 @@ const DrawerStyled = styled(Drawer)(({ theme }) => ({
   flexShrink: 0,
   '& .MuiDrawer-paper': {
     width: 80,
-    boxSizing: 'border-box',
     background: '#1a1d29',
     borderRight: '1px solid #2a2f3d',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingTop: 24,
+    paddingTop: 16,
     paddingBottom: 16,
-    transition: 'background 0.3s ease',
+    transition: 'width 0.3s ease',
+    [theme.breakpoints.down('sm')]: {
+      width: 0,
+      '&.open': { width: 80 },
+    },
   },
 }));
 
@@ -58,10 +83,11 @@ const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+  transition: 'all 0.3s ease',
   '&:hover': {
     transform: 'translateY(-5px)',
     boxShadow: '0 6px 30px rgba(0, 0, 0, 0.4)',
+    borderColor: '#60a5fa',
   },
 }));
 
@@ -74,19 +100,48 @@ const StatCard = styled(Card)(({ theme }) => ({
   alignItems: 'center',
   padding: '16px',
   height: '100%',
-  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+  transition: 'all 0.3s ease',
   '&:hover': {
     transform: 'translateY(-3px)',
     boxShadow: '0 6px 30px rgba(0, 0, 0, 0.4)',
+    borderColor: '#60a5fa',
   },
 }));
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [notifications] = useState(1);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [expanded, setExpanded] = useState({ 'Core Features': true, 'Collaboration & Resources': true });
+  const [newTask, setNewTask] = useState('');
+  const [tasks, setTasks] = useState([
+    { id: 1, text: 'Finish report', completed: false },
+    { id: 2, text: 'Prepare presentation', completed: true },
+    { id: 3, text: 'Schedule meeting', completed: false },
+  ]);
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleLogout = () => {
     navigate('/login');
+  };
+
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
+
+  const handleExpand = (section) => {
+    setExpanded((prev) => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  const handleAddTask = () => {
+    if (newTask.trim()) {
+      setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }]);
+      setNewTask('');
+    }
+  };
+
+  const handleCompleteTask = (id) => {
+    setTasks(tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task)));
   };
 
   const menuItems = [
@@ -98,53 +153,79 @@ const Dashboard = () => {
     { text: 'Notifications', icon: <NotificationsIcon />, link: '/notifications', tooltip: 'Notifications' },
   ];
 
+  const upcomingEvents = [
+    { id: 1, title: 'Team Meeting', date: 'Tomorrow, 10:00 AM' },
+    { id: 2, title: 'Project Deadline', date: 'Mar 28, 5:00 PM' },
+    { id: 3, title: 'Study Group', date: 'Mar 30, 2:00 PM' },
+    { id: 4, title: 'Client Review', date: 'Apr 1, 3:00 PM' },
+    { id: 5, title: 'Workshop', date: 'Apr 3, 11:00 AM' },
+  ];
+
+  const recentActivity = [
+    { id: 1, action: 'Completed Task: Finish Report', time: '2 hours ago' },
+    { id: 2, action: 'Started Pomodoro Session', time: '4 hours ago' },
+    { id: 3, action: 'Added Event: Team Sync', time: 'Yesterday' },
+    { id: 4, action: 'Joined Study Group', time: '2 days ago' },
+    { id: 5, action: 'Updated Profile', time: '3 days ago' },
+  ];
+
+  const progressData = [
+    { label: 'Project A', value: 75 },
+    { label: 'Project B', value: 40 },
+    { label: 'Study Goals', value: 90 },
+  ];
+
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ 
-        display: 'flex', 
-        minHeight: '100vh', 
-        width: '100vw', 
-        bgcolor: '#1a1d29', // Ensure background fills entire viewport
-        overflow: 'hidden', // Prevent any scrolling
-      }}>
+      <CssBaseline />
+      <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#1a1d29' }}>
+        {/* AppBar for Mobile */}
+        {isMobile && (
+          <AppBar position="fixed" sx={{ bgcolor: '#1a1d29', boxShadow: 'none', borderBottom: '1px solid #2a2f3d' }}>
+            <Toolbar>
+              <IconButton edge="start" color="inherit" onClick={toggleDrawer}>
+                <MenuIcon sx={{ color: '#ffffff' }} />
+              </IconButton>
+              <Typography variant="h6" sx={{ flexGrow: 1, color: '#ffffff' }}>
+                Dashboard
+              </Typography>
+            </Toolbar>
+          </AppBar>
+        )}
+
         {/* Sidebar Drawer */}
-        <DrawerStyled variant="permanent">
-          <Avatar sx={{ bgcolor: '#3b82f6', mb: 4, width: 48, height: 48, fontSize: '1.5rem' }}>K</Avatar>
+        <DrawerStyled variant={isMobile ? 'temporary' : 'permanent'} open={drawerOpen} onClose={toggleDrawer} className={drawerOpen ? 'open' : ''}>
+          <Avatar sx={{ bgcolor: '#3b82f6', mb: 4, width: 48, height: 48 }}>K</Avatar>
           {menuItems.map((item) => (
             <Tooltip title={item.tooltip} placement="right" key={item.text}>
-              <ListItem 
-                button 
-                component={Link} 
-                to={item.link} 
-                sx={{ 
-                  justifyContent: 'center', 
-                  mb: 3,
+              <ListItem
+                button
+                component={Link}
+                to={item.link}
+                sx={{
+                  justifyContent: 'center',
+                  mb: 2,
                   borderRadius: '8px',
                   width: '48px',
                   height: '48px',
-                  transition: 'background 0.3s ease',
-                  '&:hover': {
-                    backgroundColor: '#2a2f3d',
-                  },
+                  '&:hover': { bgcolor: '#2a2f3d' },
                 }}
               >
                 <ListItemIcon sx={{ color: '#9ca3af', minWidth: 'auto' }}>{item.icon}</ListItemIcon>
               </ListItem>
             </Tooltip>
           ))}
-          <Divider sx={{ bgcolor: '#2a2f3d', width: '50%', my: 3 }} />
+          <Divider sx={{ bgcolor: '#2a2f3d', width: '50%', my: 2 }} />
           <Tooltip title="Settings" placement="right">
-            <ListItem 
-              button 
-              sx={{ 
-                justifyContent: 'center', 
-                mb: 3,
+            <ListItem
+              button
+              sx={{
+                justifyContent: 'center',
+                mb: 2,
                 borderRadius: '8px',
                 width: '48px',
                 height: '48px',
-                '&:hover': {
-                  backgroundColor: '#2a2f3d',
-                },
+                '&:hover': { bgcolor: '#2a2f3d' },
               }}
             >
               <ListItemIcon sx={{ color: '#9ca3af', minWidth: 'auto' }}>
@@ -153,17 +234,15 @@ const Dashboard = () => {
             </ListItem>
           </Tooltip>
           <Tooltip title="Logout" placement="right">
-            <ListItem 
-              button 
+            <ListItem
+              button
               onClick={handleLogout}
-              sx={{ 
+              sx={{
                 justifyContent: 'center',
                 borderRadius: '8px',
                 width: '48px',
                 height: '48px',
-                '&:hover': {
-                  backgroundColor: '#2a2f3d',
-                },
+                '&:hover': { bgcolor: '#2a2f3d' },
               }}
             >
               <ListItemIcon sx={{ color: '#9ca3af', minWidth: 'auto' }}>
@@ -174,282 +253,264 @@ const Dashboard = () => {
         </DrawerStyled>
 
         {/* Main Content */}
-        <Box 
-          component="main" 
-          sx={{ 
-            flexGrow: 1, 
-            p: { xs: 2, sm: 3, md: 4 }, 
-            bgcolor: '#1a1d29', // Match background to fill gaps
-            width: 'calc(100vw - 80px)', // Adjust for sidebar width
-            minHeight: '100vh', // Ensure it fills the height
-            overflowY: 'auto', // Allow vertical scrolling if needed
-            overflowX: 'hidden', // Prevent horizontal scrolling
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: { xs: 2, sm: 3, md: 4 },
+            bgcolor: '#1a1d29',
+            width: 'calc(100% - 80px)',
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
-            mb: 4,
-            maxWidth: '100%',
-          }}>
+          {isMobile && <Box sx={{ height: '64px' }} />}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
             <Typography variant="h4" sx={{ color: '#ffffff', fontWeight: 'bold' }}>
               Welcome, User!
             </Typography>
+            <Badge badgeContent={notifications} color="error">
+              <NotificationsIcon sx={{ color: '#9ca3af', cursor: 'pointer' }} />
+            </Badge>
           </Box>
 
           {/* Stats Section */}
           <Grid container spacing={2} sx={{ mb: 4 }}>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatCard>
-                <EventIcon sx={{ color: '#3b82f6', mr: 2, fontSize: '2rem' }} />
-                <Box>
-                  <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.1rem' }}>
-                    Total Events
+            {[
+              { icon: <EventIcon />, title: 'Total Events', value: '8,739.76' },
+              { icon: <ListIcon />, title: 'Tasks Today', value: '146.76' },
+              { icon: <TimerIcon />, title: 'Focus Hours', value: '12.5' },
+              { icon: <GroupIcon />, title: 'Group Projects', value: '3 Active' },
+            ].map((stat, index) => (
+              <Grid item xs={12} sm={6} md={3} key={index}>
+                <StatCard>
+                  {React.cloneElement(stat.icon, { sx: { color: '#3b82f6', mr: 2, fontSize: '2rem' } })}
+                  <Box>
+                    <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.1rem' }}>
+                      {stat.title}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#9ca3af', fontSize: '1rem' }}>
+                      {stat.value}
+                    </Typography>
+                  </Box>
+                </StatCard>
+              </Grid>
+            ))}
+          </Grid>
+
+          {/* Quick Add Task & Upcoming Events */}
+          <Grid container spacing={2} sx={{ mb: 4, flexGrow: 1 }}>
+            {/* Quick Add Task */}
+            <Grid item xs={12} md={6}>
+              <StyledCard sx={{ height: '100%' }}>
+                <CardContent>
+                  <Typography variant="h6" sx={{ color: '#ffffff', mb: 2 }}>
+                    Quick Add Task
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#9ca3af', fontSize: '1rem' }}>
-                    8,739.76
-                  </Typography>
-                </Box>
-              </StatCard>
+                  <Box sx={{ display: 'flex', mb: 2 }}>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      placeholder="Add a new task..."
+                      value={newTask}
+                      onChange={(e) => setNewTask(e.target.value)}
+                      sx={{
+                        mr: 1,
+                        '& .MuiOutlinedInput-root': {
+                          background: '#2a2f3d',
+                          color: '#ffffff',
+                          borderRadius: '8px',
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': { borderColor: '#3b82f6' },
+                      }}
+                    />
+                    <IconButton color="primary" onClick={handleAddTask}>
+                      <AddIcon />
+                    </IconButton>
+                  </Box>
+                  <List sx={{ maxHeight: '300px', overflowY: 'auto' }}>
+                    {tasks.map((task) => (
+                      <ListItemButton key={task.id} onClick={() => handleCompleteTask(task.id)}>
+                        <ListItemIcon>
+                          {task.completed ? <DoneIcon sx={{ color: '#3b82f6' }} /> : <AccessTimeIcon sx={{ color: '#9ca3af' }} />}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={task.text}
+                          sx={{ color: task.completed ? '#9ca3af' : '#ffffff', textDecoration: task.completed ? 'line-through' : 'none' }}
+                        />
+                      </ListItemButton>
+                    ))}
+                  </List>
+                </CardContent>
+              </StyledCard>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatCard>
-                <ListIcon sx={{ color: '#3b82f6', mr: 2, fontSize: '2rem' }} />
-                <Box>
-                  <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.1rem' }}>
-                    Tasks Today
+
+            {/* Upcoming Events */}
+            <Grid item xs={12} md={6}>
+              <StyledCard sx={{ height: '100%' }}>
+                <CardContent>
+                  <Typography variant="h6" sx={{ color: '#ffffff', mb: 2 }}>
+                    Upcoming Events
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#9ca3af', fontSize: '1rem' }}>
-                    146.76
-                  </Typography>
-                </Box>
-              </StatCard>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatCard>
-                <TimerIcon sx={{ color: '#3b82f6', mr: 2, fontSize: '2rem' }} />
-                <Box>
-                  <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.1rem' }}>
-                    Focus Hours
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: '#9ca3af', fontSize: '1rem' }}>
-                    12.5
-                  </Typography>
-                </Box>
-              </StatCard>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatCard>
-                <GroupIcon sx={{ color: '#3b82f6', mr: 2, fontSize: '2rem' }} />
-                <Box>
-                  <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.1rem' }}>
-                    Group Projects
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: '#9ca3af', fontSize: '1rem' }}>
-                    3 Active
-                  </Typography>
-                </Box>
-              </StatCard>
+                  <TableContainer>
+                    <Table sx={{ minWidth: 300 }}>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell sx={{ color: '#9ca3af' }}>Event</TableCell>
+                          <TableCell sx={{ color: '#9ca3af' }}>Date</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {upcomingEvents.map((event) => (
+                          <TableRow key={event.id}>
+                            <TableCell sx={{ color: '#ffffff' }}>{event.title}</TableCell>
+                            <TableCell sx={{ color: '#9ca3af' }}>{event.date}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </StyledCard>
             </Grid>
           </Grid>
 
           {/* Feature Cards */}
-          <Grid container spacing={2}>
-            {/* Event Calendar */}
-            <Grid item xs={12} sm={6} md={4} lg={4}>
-              <StyledCard>
-                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <EventIcon sx={{ color: '#3b82f6', mr: 1, fontSize: '1.5rem' }} />
-                    <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.25rem' }}>
-                      Event Calendar
+          <Grid container spacing={2} sx={{ mb: 4, flexGrow: 1 }}>
+            {[
+              {
+                title: 'Core Features',
+                items: [
+                  { icon: <EventIcon />, title: 'Event Calendar', desc: 'Sync with Google, Apple, or Outlook.', action: 'View Calendar', link: '/calendar' },
+                  { icon: <ListIcon />, title: 'To-Do List', desc: 'Manage tasks with priority and due dates.', action: 'View Tasks', link: '/todo' },
+                  { icon: <TimerIcon />, title: 'Pomodoro Timer', desc: 'Focus with timed study sessions.', action: 'Start Timer', link: '/pomodoro' },
+                ],
+              },
+              {
+                title: 'Collaboration & Resources',
+                items: [
+                  { icon: <GroupIcon />, title: 'Collaboration', desc: 'Share schedules and manage projects.', action: 'Collaborate', link: '/collaboration' },
+                  { icon: <SchoolIcon />, title: 'Academic Assistance', desc: 'Access resources and GPA calculator.', action: 'Explore', link: '/resources' },
+                  { icon: <NotificationsIcon />, title: 'Notifications', desc: 'Stay updated with reminders.', action: 'View Alerts', link: '/notifications' },
+                ],
+              },
+            ].map((section, index) => (
+              <Grid item xs={12} key={index}>
+                <Box sx={{ mb: 4 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, cursor: 'pointer' }} onClick={() => handleExpand(section.title)}>
+                    <Typography variant="h5" sx={{ color: '#ffffff', mr: 1 }}>
+                      {section.title}
                     </Typography>
+                    {expanded[section.title] ? <ExpandLessIcon sx={{ color: '#9ca3af' }} /> : <ExpandMoreIcon sx={{ color: '#9ca3af' }} />}
                   </Box>
-                  <Typography variant="body2" sx={{ color: '#9ca3af', mb: 3, fontSize: '0.9rem' }}>
-                    Sync with Google, Apple, or Outlook.
+                  <Collapse in={expanded[section.title] || !isMobile}>
+                    <Grid container spacing={2}>
+                      {section.items.map((item, idx) => (
+                        <Grid item xs={12} sm={6} md={4} key={idx}>
+                          <StyledCard>
+                            <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                {React.cloneElement(item.icon, { sx: { color: '#3b82f6', mr: 1, fontSize: '1.5rem' } })}
+                                <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.25rem' }}>
+                                  {item.title}
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" sx={{ color: '#9ca3af', mb: 3, flexGrow: 1 }}>
+                                {item.desc}
+                              </Typography>
+                              <Button
+                                variant="contained"
+                                component={Link}
+                                to={item.link}
+                                sx={{
+                                  bgcolor: '#3b82f6',
+                                  color: '#ffffff',
+                                  borderRadius: 20,
+                                  '&:hover': { bgcolor: '#2563eb' },
+                                  mt: 'auto',
+                                }}
+                              >
+                                {item.action}
+                              </Button>
+                            </CardContent>
+                          </StyledCard>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Collapse>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+
+          {/* Recent Activity, Progress Tracker & Motivational Quote */}
+          <Grid container spacing={2} sx={{ mb: 4, flexGrow: 1 }}>
+            {/* Recent Activity */}
+            <Grid item xs={12} md={4}>
+              <StyledCard sx={{ height: '100%' }}>
+                <CardContent>
+                  <Typography variant="h6" sx={{ color: '#ffffff', mb: 2 }}>
+                    Recent Activity
                   </Typography>
-                  <Box sx={{ mt: 'auto' }}>
-                    <Button
-                      variant="contained"
-                      sx={{ 
-                        bgcolor: '#3b82f6', 
-                        color: '#ffffff', 
-                        borderRadius: 20, 
-                        '&:hover': { bgcolor: '#2563eb' },
-                        width: '100%',
-                        fontSize: '0.9rem',
-                        padding: '8px 16px',
-                      }}
-                    >
-                      View Calendar
-                    </Button>
-                  </Box>
+                  <List sx={{ maxHeight: '300px', overflowY: 'auto' }}>
+                    {recentActivity.map((activity) => (
+                      <ListItem key={activity.id}>
+                        <ListItemText
+                          primary={activity.action}
+                          secondary={activity.time}
+                          primaryTypographyProps={{ color: '#ffffff' }}
+                          secondaryTypographyProps={{ color: '#9ca3af' }}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
                 </CardContent>
               </StyledCard>
             </Grid>
 
-            {/* To-Do List */}
-            <Grid item xs={12} sm={6} md={4} lg={4}>
-              <StyledCard>
-                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <ListIcon sx={{ color: '#3b82f6', mr: 1, fontSize: '1.5rem' }} />
-                    <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.25rem' }}>
-                      To-Do List
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" sx={{ color: '#9ca3af', mb: 3, fontSize: '0.9rem' }}>
-                    Manage tasks with priority and due dates.
+            {/* Progress Tracker */}
+            <Grid item xs={12} md={4}>
+              <StyledCard sx={{ height: '100%' }}>
+                <CardContent>
+                  <Typography variant="h6" sx={{ color: '#ffffff', mb: 2 }}>
+                    Progress Tracker
                   </Typography>
-                  <Box sx={{ mt: 'auto' }}>
-                    <Button
-                      variant="contained"
-                      sx={{ 
-                        bgcolor: '#3b82f6', 
-                        color: '#ffffff', 
-                        borderRadius: 20, 
-                        '&:hover': { bgcolor: '#2563eb' },
-                        width: '100%',
-                        fontSize: '0.9rem',
-                        padding: '8px 16px',
-                      }}
-                    >
-                      View Tasks
-                    </Button>
-                  </Box>
+                  {progressData.map((progress, index) => (
+                    <Box key={index} sx={{ mb: 2 }}>
+                      <Typography variant="body1" sx={{ color: '#ffffff', mb: 1 }}>
+                        {progress.label}
+                      </Typography>
+                      <LinearProgress
+                        variant="determinate"
+                        value={progress.value}
+                        sx={{
+                          height: 10,
+                          borderRadius: 5,
+                          backgroundColor: '#2a2f3d',
+                          '& .MuiLinearProgress-bar': { backgroundColor: '#3b82f6' },
+                        }}
+                      />
+                      <Typography variant="body2" sx={{ color: '#9ca3af', mt: 1 }}>
+                        {progress.value}%
+                      </Typography>
+                    </Box>
+                  ))}
                 </CardContent>
               </StyledCard>
             </Grid>
 
-            {/* Pomodoro Timer */}
-            <Grid item xs={12} sm={6} md={4} lg={4}>
-              <StyledCard>
-                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <TimerIcon sx={{ color: '#3b82f6', mr: 1, fontSize: '1.5rem' }} />
-                    <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.25rem' }}>
-                      Pomodoro Timer
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" sx={{ color: '#9ca3af', mb: 3, fontSize: '0.9rem' }}>
-                    Focus with timed study sessions.
+            {/* Motivational Quote */}
+            <Grid item xs={12} md={4}>
+              <StyledCard sx={{ height: '100%' }}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <QuoteIcon sx={{ color: '#3b82f6', fontSize: '2.5rem', mb: 2 }} />
+                  <Typography variant="h6" sx={{ color: '#ffffff', mb: 1 }}>
+                    "Success is the sum of small efforts, repeated day in and day out."
                   </Typography>
-                  <Box sx={{ mt: 'auto' }}>
-                    <Button
-                      variant="contained"
-                      sx={{ 
-                        bgcolor: '#3b82f6', 
-                        color: '#ffffff', 
-                        borderRadius: 20, 
-                        '&:hover': { bgcolor: '#2563eb' },
-                        width: '100%',
-                        fontSize: '0.9rem',
-                        padding: '8px 16px',
-                      }}
-                    >
-                      Start Timer
-                    </Button>
-                  </Box>
-                </CardContent>
-              </StyledCard>
-            </Grid>
-
-            {/* Collaboration */}
-            <Grid item xs={12} sm={6} md={4} lg={4}>
-              <StyledCard>
-                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <GroupIcon sx={{ color: '#3b82f6', mr: 1, fontSize: '1.5rem' }} />
-                    <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.25rem' }}>
-                      Collaboration
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" sx={{ color: '#9ca3af', mb: 3, fontSize: '0.9rem' }}>
-                    Share schedules and manage projects.
+                  <Typography variant="body2" sx={{ color: '#9ca3af' }}>
+                    — Robert Collier
                   </Typography>
-                  <Box sx={{ mt: 'auto' }}>
-                    <Button
-                      variant="contained"
-                      sx={{ 
-                        bgcolor: '#3b82f6', 
-                        color: '#ffffff', 
-                        borderRadius: 20, 
-                        '&:hover': { bgcolor: '#2563eb' },
-                        width: '100%',
-                        fontSize: '0.9rem',
-                        padding: '8px 16px',
-                      }}
-                    >
-                      Collaborate
-                    </Button>
-                  </Box>
-                </CardContent>
-              </StyledCard>
-            </Grid>
-
-            {/* Academic Assistance */}
-            <Grid item xs={12} sm={6} md={4} lg={4}>
-              <StyledCard>
-                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <SchoolIcon sx={{ color: '#3b82f6', mr: 1, fontSize: '1.5rem' }} />
-                    <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.25rem' }}>
-                      Academic Assistance
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" sx={{ color: '#9ca3af', mb: 3, fontSize: '0.9rem' }}>
-                    Access resources and GPA calculator.
-                  </Typography>
-                  <Box sx={{ mt: 'auto' }}>
-                    <Button
-                      variant="contained"
-                      sx={{ 
-                        bgcolor: '#3b82f6', 
-                        color: '#ffffff', 
-                        borderRadius: 20, 
-                        '&:hover': { bgcolor: '#2563eb' },
-                        width: '100%',
-                        fontSize: '0.9rem',
-                        padding: '8px 16px',
-                      }}
-                    >
-                      Explore
-                    </Button>
-                  </Box>
-                </CardContent>
-              </StyledCard>
-            </Grid>
-
-            {/* Notifications */}
-            <Grid item xs={12} sm={6} md={4} lg={4}>
-              <StyledCard>
-                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <NotificationsIcon sx={{ color: '#3b82f6', mr: 1, fontSize: '1.5rem' }} />
-                    <Typography variant="h6" sx={{ color: '#ffffff', fontSize: '1.25rem' }}>
-                      Notifications
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" sx={{ color: '#9ca3af', mb: 3, fontSize: '0.9rem' }}>
-                    Stay updated with reminders.
-                  </Typography>
-                  <Box sx={{ mt: 'auto' }}>
-                    <Button
-                      variant="contained"
-                      sx={{ 
-                        bgcolor: '#3b82f6', 
-                        color: '#ffffff', 
-                        borderRadius: 20, 
-                        '&:hover': { bgcolor: '#2563eb' },
-                        width: '100%',
-                        fontSize: '0.9rem',
-                        padding: '8px 16px',
-                      }}
-                    >
-                      View Alerts
-                    </Button>
-                  </Box>
                 </CardContent>
               </StyledCard>
             </Grid>
