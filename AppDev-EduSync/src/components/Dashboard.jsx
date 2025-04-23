@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AddEventDialog from './AddEventDialog';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -173,6 +174,29 @@ const MainContent = styled(Box)(({ theme }) => ({
 }));
 
 const Dashboard = () => {
+
+  //4/23/2025
+  const [addEventDialogOpen, setAddEventDialogOpen] = useState(false);
+  const [events, setEvents] = useState([
+    { id: 1, name: 'Math Study Group', dateTime: new Date('2025-04-23T15:00:00'), deadline: new Date('2025-04-24T23:59:00') },
+    { id: 2, name: 'Project Deadline', dateTime: new Date('2025-04-24T11:59:00'), deadline: new Date('2025-04-24T23:59:00') },
+  ]);
+  const handleAddEventDialogOpen = () => {
+    setAddEventDialogOpen(true);
+  };
+
+  const handleAddEventDialogClose = () => {
+    setAddEventDialogOpen(false);
+  };
+
+  const handleAddEvent = (newEvent) => {
+    setEvents([...events, { id: Date.now(), ...newEvent }]);
+    setRecentActivities([{ id: Date.now(), action: `Added event: ${newEvent.name}`, timestamp: 'Just now' }, ...recentActivities]);
+    // You might want to update your 'stats' or other relevant state here
+  };
+///////////////////////////////////////////////////////////////
+
+
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -430,43 +454,42 @@ const Dashboard = () => {
               {/* Event Calendar and To-Do List Row */}
               <Grid container spacing={3} sx={{ mb: 4 }}>
                 {/* Event Calendar */}
-                <Grid item xs={12} md={6}>
-                  <Fade in={true} timeout={900}>
-                    <StyledCard sx={{ height: '100%' }}>
-                      <CardContent>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                          <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                            Event Calendar
-                          </Typography>
-                          <Tooltip title="Sync with Google Calendar">
-                            <Button variant="outlined" startIcon={<GoogleIcon />} size="small" color="primary">
-                              Sync
-                            </Button>
-                          </Tooltip>
-                        </Box>
-                        <Box sx={{ bgcolor: 'action.hover', p: 2, borderRadius: 1, mb: 2 }}>
-                          <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                            Math Study Group
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Today, 3:00 PM - 4:30 PM
-                          </Typography>
-                        </Box>
-                        <Box sx={{ bgcolor: 'action.hover', p: 2, borderRadius: 1, mb: 2 }}>
-                          <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                            Project Deadline
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Tomorrow, 11:59 PM
-                          </Typography>
-                        </Box>
-                        <Button variant="text" startIcon={<AddIcon />} color="primary">
-                          Add Event
+            <Grid item xs={12} md={6}>
+              <Fade in={true} timeout={900}>
+                <StyledCard sx={{ height: '100%' }}>
+                  <CardContent>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                        Event Calendar
+                      </Typography>
+                      <Tooltip title="Sync with Google Calendar">
+                        <Button variant="outlined" startIcon={<GoogleIcon />} size="small" color="primary">
+                          Sync
                         </Button>
-                      </CardContent>
-                    </StyledCard>
-                  </Fade>
-                </Grid>
+                      </Tooltip>
+                    </Box>
+                    {events.map((event) => ( // <--- Mapping through the 'events' state
+                      <Box key={event.id} sx={{ bgcolor: 'action.hover', p: 2, borderRadius: 1, mb: 2 }}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                          {event.name} {/* Display event name */}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {event.dateTime ? event.dateTime.toLocaleString() : 'No Date/Time'} {/* Display date and time */}
+                          {event.deadline && (
+                            <Typography variant="caption" color="text.secondary">
+                              Deadline: {event.deadline.toLocaleString()}
+                            </Typography>
+                          )}
+                        </Typography>
+                      </Box>
+                    ))}
+                    <Button variant="text" startIcon={<AddIcon />} color="primary" onClick={handleAddEventDialogOpen}>
+                      Add Event
+                    </Button>
+                  </CardContent>
+                </StyledCard>
+              </Fade>
+            </Grid>
 
                 {/* To-Do List */}
                 <Grid item xs={12} md={6}>
@@ -783,6 +806,11 @@ const Dashboard = () => {
             </Grid>
           </Grid>
         </MainContent>
+        <AddEventDialog
+        open={addEventDialogOpen}
+        onClose={handleAddEventDialogClose}
+        onAddEvent={handleAddEvent}
+      />
       </Box>
     </ThemeProvider>
   );
