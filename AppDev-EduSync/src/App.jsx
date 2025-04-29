@@ -6,8 +6,10 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import Calendar from './components/Calendar';
-import TodoList from './components/TodoList'; // Import the new TodoList component
+import TodoList from './components/TodoList';
+import ProgressTracker from './components/ProgressTracker'; // Import the new ProgressTracker component
 import LandingPage from './components/LandingPage';
+import { TaskProvider } from './components/TaskContext'; // Import TaskProvider
 import './App.css';
 
 function App() {
@@ -42,16 +44,19 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard darkMode={darkMode} setDarkMode={setDarkMode} />} />
-          <Route path="/calendar" element={<Calendar theme={theme} />} />
-          <Route path="/todo" element={<TodoList theme={theme} />} />
-          <Route path="/" element={<LandingPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
-        </Routes>
-      </Router>
+      <TaskProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard darkMode={darkMode} setDarkMode={setDarkMode} />} />
+            <Route path="/calendar" element={<Calendar theme={theme} />} />
+            <Route path="/todo" element={<TodoList theme={theme} />} />
+            <Route path="/progress" element={<ProgressTracker theme={theme} />} />
+            <Route path="/" element={<LandingPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
+          </Routes>
+        </Router>
+      </TaskProvider>
     </ThemeProvider>
   );
 }
