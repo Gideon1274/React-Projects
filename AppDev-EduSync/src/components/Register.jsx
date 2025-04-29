@@ -58,11 +58,13 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -82,19 +84,17 @@ const Login = () => {
       setIsLoading(false);
       return;
     }
-
-    // Hardcoded admin credentials
-    const adminEmail = 'admin123@gmail.com';
-    const adminPassword = 'admin123';
+    if (password !== confirmPassword) {
+      setError("Passwords don't match!");
+      setIsLoading(false);
+      return;
+    }
 
     setTimeout(() => {
-      if (email === adminEmail && password === adminPassword) {
-        setError('');
-        navigate('/dashboard');
-      } else {
-        setError('Invalid email or password.');
-        setIsLoading(false);
-      }
+      setError('');
+      console.log('Registration attempt:', { email, password });
+      setIsLoading(false);
+      navigate('/login'); // Redirect to login after successful registration
     }, 1000); // Simulate API call delay
   };
 
@@ -115,7 +115,7 @@ const Login = () => {
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h1" variant="h5" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                Sign In
+                Sign Up
               </Typography>
               {error && (
                 <Fade in={true} timeout={300}>
@@ -154,7 +154,7 @@ const Login = () => {
                   label="Password"
                   type={showPassword ? 'text' : 'password'}
                   id="password"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   error={!!error && error.includes('Password')}
@@ -176,15 +176,36 @@ const Login = () => {
                     ),
                   }}
                 />
-                <Box sx={{ textAlign: 'right', mt: 1 }}>
-                  <Typography
-                    variant="body2"
-                    sx={{ color: 'primary.main', cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
-                    onClick={() => alert('Forgot Password functionality coming soon!')}
-                  >
-                    Forgot Password?
-                  </Typography>
-                </Box>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  id="confirmPassword"
+                  autoComplete="new-password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  error={!!error && error.includes('Passwords')}
+                  helperText={error && error.includes('Passwords') ? error : ''}
+                  variant="outlined"
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 8,
+                      '&:hover fieldset': { borderColor: 'primary.main' },
+                    },
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
+                          {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
                 <StyledButton
                   type="submit"
                   fullWidth
@@ -192,12 +213,12 @@ const Login = () => {
                   sx={{ mt: 3, mb: 2 }}
                   disabled={isLoading}
                 >
-                  {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign In'}
+                  {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
                 </StyledButton>
                 <Typography variant="body2" align="center" color="text.secondary">
-                  {"Don't have an account? "}
-                  <Link to="/register" style={{ textDecoration: 'none', color: 'primary.main' }}>
-                    Sign Up
+                  Already have an account?{' '}
+                  <Link to="/login" style={{ textDecoration: 'none', color: 'primary.main' }}>
+                    Sign In
                   </Link>
                 </Typography>
               </Box>
@@ -209,4 +230,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
