@@ -7,9 +7,10 @@ import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import Calendar from './components/Calendar';
 import TodoList from './components/TodoList';
-import ProgressTracker from './components/ProgressTracker'; // Import the new ProgressTracker component
+import ProgressTracker from './components/ProgressTracker';
+import StudyTools from './components/StudyTools'; // Import the new StudyTools component
 import LandingPage from './components/LandingPage';
-import { TaskProvider } from './components/TaskContext'; // Import TaskProvider
+import { TaskProvider } from './components/TaskContext';
 import './App.css';
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
             <Route path="/calendar" element={<Calendar theme={theme} />} />
             <Route path="/todo" element={<TodoList theme={theme} />} />
             <Route path="/progress" element={<ProgressTracker theme={theme} />} />
+            <Route path="/study" element={<StudyTools theme={theme} />} />
             <Route path="/" element={<LandingPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
           </Routes>
         </Router>
