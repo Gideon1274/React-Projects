@@ -1,29 +1,58 @@
 import { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
+import Calendar from './components/Calendar';
+import TodoList from './components/TodoList'; // Import the new TodoList component
+import LandingPage from './components/LandingPage';
 import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [darkMode, setDarkMode] = useState(false);
+  
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? 'dark' : 'light',
+      primary: { main: '#3b82f6' },
+      secondary: { main: '#10b981' },
+      background: {
+        default: darkMode ? '#0f172a' : '#f1f5f9',
+        paper: darkMode ? '#1e293b' : '#ffffff',
+      },
+      text: {
+        primary: darkMode ? '#f1f5f9' : '#1e293b',
+        secondary: darkMode ? '#cbd5e1' : '#64748b',
+      },
+    },
+    shape: {
+      borderRadius: 12,
+    },
+    typography: {
+      fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+      h1: { fontWeight: 800 },
+      h2: { fontWeight: 700 },
+      h3: { fontWeight: 600 },
+      body1: { fontWeight: 400 },
+    },
+  });
 
   return (
-    <Router>
-      <div className="App">
-        <nav>
-          <Link to="/login" className="custom-link">Login</Link> |{' '}
-          <Link to="/register" className="custom-link">Register</Link>
-        </nav>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard darkMode={darkMode} setDarkMode={setDarkMode} />} />
+          <Route path="/calendar" element={<Calendar theme={theme} />} />
+          <Route path="/todo" element={<TodoList theme={theme} />} />
+          <Route path="/" element={<LandingPage darkMode={darkMode} setDarkMode={setDarkMode} />} />
         </Routes>
-      
-      </div>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 }
 
